@@ -6,6 +6,7 @@ angular.module('cgNotify', []).factory('notify',['$timeout','$http','$compile','
 		var duration = 4000;
 		var defaultTemplate = 'angular-notify.html';
 		var position = 'right';
+		var container = document.body;
 
 		var messageElements = [];
 
@@ -17,7 +18,7 @@ angular.module('cgNotify', []).factory('notify',['$timeout','$http','$compile','
 
 			args.template = args.template ? args.template : defaultTemplate;
 			args.position = args.position ? args.position : position;
-			args.container = args.container ? args.container : document.body;
+			args.container = args.container ? args.container : container;
 
 			$http.get(args.template,{cache: $templateCache}).success(function(template){
 
@@ -26,7 +27,7 @@ angular.module('cgNotify', []).factory('notify',['$timeout','$http','$compile','
 				scope.$message = args.message;
 
 				var templateElement = $compile(template)(scope);
-				templateElement.bind('webkitTransitionEnd oTransitionEnd otransitionend transitionend msTransitionEnd', function(e){
+				templateElement.bind('webkitTransitionEnd oTransitionEnd otransitionend etransitionend msTransitionEnd', function(e){
 					if (e.propertyName === 'opacity' ||
 						(e.originalEvent && e.originalEvent.propertyName === 'opacity')){
 
@@ -78,11 +79,12 @@ angular.module('cgNotify', []).factory('notify',['$timeout','$http','$compile','
 		};
 
 		notify.config = function(args){
-			startTop = args.top ? args.top : startTop;
-			verticalSpacing = args.verticalSpacing ? args.verticalSpacing : verticalSpacing;
-			duration = args.duration ? args.duration : duration;
+			startTop = args.top !== undefined ? args.top : startTop;
+			verticalSpacing = args.verticalSpacing !== undefined ? args.verticalSpacing : verticalSpacing;
+			duration = args.duration !== undefined  ? args.duration : duration;
 			defaultTemplate = args.template ? args.template : defaultTemplate;
 			position = args.position ? args.position : position;
+			container = args.container ? args.container : container;
 		};
 
 		notify.closeAll = function(){
